@@ -201,9 +201,14 @@ EOD;
 
         if (CellHelper::isFormula($cellValue)) {
             $parts = explode("|||", $cellValue);
+            $formula = $parts[0];
+
+            if (strpos($formula, '{#}') !== false) {
+                $formula = str_replace('{#}', $rowIndex, $formula);
+            }
 
             $cellXML .= '>';
-            $cellXML .= "<f>$parts[0]</f>";
+            $cellXML .= "<f>$formula</f>";
 
             if (isset($parts[1])) {
                 $cellXML .= "<v>$parts[1]</v>";
