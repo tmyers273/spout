@@ -282,6 +282,21 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return void
      */
+    public function testReadShouldApplyCustomDateFormatNumberEvenIfApplyNumberFormatNotSpecified()
+    {
+        $shouldFormatDates = true;
+        $allRows = $this->getAllRowsForFile('sheet_with_custom_date_formats_and_no_apply_number_format.xlsx', $shouldFormatDates);
+
+        $expectedRows = [
+            // "General", "GENERAL", "MM/DD/YYYY", "MM/dd/YYYY", "H:MM:SS"
+            ['42382', '42382', '01/13/2016', '01/13/2016', '4:43:25'],
+        ];
+        $this->assertEquals($expectedRows, $allRows);
+    }
+
+    /**
+     * @return void
+     */
     public function testReadShouldKeepEmptyCellsAtTheEndIfDimensionsSpecified()
     {
         $allRows = $this->getAllRowsForFile('sheet_without_dimensions_but_spans_and_empty_cells.xlsx');
@@ -337,16 +352,39 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return void
      */
-    public function testReadShouldSkipEmptyRows()
+    public function testReadShouldSkipEmptyRowsIfShouldPreserveEmptyRowsNotSet()
     {
-        $allRows = $this->getAllRowsForFile('sheet_with_empty_row.xlsx');
+        $allRows = $this->getAllRowsForFile('sheet_with_empty_rows_and_missing_row_index.xlsx');
 
-        $this->assertEquals(2, count($allRows), 'There should be only 2 rows, because the empty row is skipped');
+        $this->assertEquals(3, count($allRows), 'There should be only 3 rows, because the empty rows are skipped');
 
         $expectedRows = [
-            ['s1--A1', 's1--B1', 's1--C1', 's1--D1', 's1--E1'],
             // skipped row here
-            ['s1--A3', 's1--B3', 's1--C3', 's1--D3', 's1--E3'],
+            ['s1--A2', 's1--B2', 's1--C2'],
+            // skipped row here
+            // skipped row here
+            ['s1--A5', 's1--B5', 's1--C5'],
+            ['s1--A6', 's1--B6', 's1--C6'],
+        ];
+        $this->assertEquals($expectedRows, $allRows);
+    }
+
+    /**
+     * @return void
+     */
+    public function testReadShouldReturnEmptyLinesIfShouldPreserveEmptyRowsSet()
+    {
+        $allRows = $this->getAllRowsForFile('sheet_with_empty_rows_and_missing_row_index.xlsx', false, true);
+
+        $this->assertEquals(6, count($allRows), 'There should be 6 rows');
+
+        $expectedRows = [
+            [''],
+            ['s1--A2', 's1--B2', 's1--C2'],
+            [''],
+            [''],
+            ['s1--A5', 's1--B5', 's1--C5'],
+            ['s1--A6', 's1--B6', 's1--C6'],
         ];
         $this->assertEquals($expectedRows, $allRows);
     }
@@ -580,15 +618,18 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $fileName
      * @param bool|void $shouldFormatDates
+     * @param bool|void $shouldPreserveEmptyRows
      * @return array All the read rows the given file
      */
-    private function getAllRowsForFile($fileName, $shouldFormatDates = false)
+    private function getAllRowsForFile($fileName, $shouldFormatDates = false, $shouldPreserveEmptyRows = false)
     {
         $allRows = [];
         $resourcePath = $this->getResourcePath($fileName);
 
+        /** @var \Box\Spout\Reader\XLSX\Reader $reader */
         $reader = ReaderFactory::create(Type::XLSX);
         $reader->setShouldFormatDates($shouldFormatDates);
+        $reader->setShouldPreserveEmptyRows($shouldPreserveEmptyRows);
         $reader->open($resourcePath);
 
         foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {

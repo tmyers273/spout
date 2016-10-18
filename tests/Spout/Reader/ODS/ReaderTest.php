@@ -81,6 +81,19 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return void
      */
+    public function testReadShouldSupportNumberRowsRepeated()
+    {
+        $allRows = $this->getAllRowsForFile('sheet_with_number_rows_repeated.ods');
+        $expectedRows = [
+            ['foo', 10.43],
+            ['foo', 10.43],
+        ];
+        $this->assertEquals($expectedRows, $allRows);
+    }
+
+    /**
+     * @return void
+     */
     public function testReadShouldSupportNumberColumnsRepeated()
     {
         $allRows = $this->getAllRowsForFile('sheet_with_number_columns_repeated.ods');
@@ -211,15 +224,39 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return void
      */
-    public function testReadShouldSkipEmptyRow()
+    public function testReadShouldSkipEmptyRowsIfShouldPreserveEmptyRowsNotSet()
     {
-        $allRows = $this->getAllRowsForFile('sheet_with_empty_row.ods');
-        $this->assertEquals(2, count($allRows), 'There should be only 2 rows, because the empty row is skipped');
+        $allRows = $this->getAllRowsForFile('sheet_with_empty_rows.ods');
+
+        $this->assertEquals(3, count($allRows), 'There should be only 3 rows, because the empty rows are skipped');
 
         $expectedRows = [
-            ['ods--11', 'ods--12', 'ods--13'],
-            // row skipped here
+            // skipped row here
             ['ods--21', 'ods--22', 'ods--23'],
+            // skipped row here
+            // skipped row here
+            ['ods--51', 'ods--52', 'ods--53'],
+            ['ods--61', 'ods--62', 'ods--63'],
+        ];
+        $this->assertEquals($expectedRows, $allRows);
+    }
+
+    /**
+     * @return void
+     */
+    public function testReadShouldReturnEmptyLinesIfShouldPreserveEmptyRowsSet()
+    {
+        $allRows = $this->getAllRowsForFile('sheet_with_empty_rows.ods', false, true);
+
+        $this->assertEquals(6, count($allRows), 'There should be 6 rows');
+
+        $expectedRows = [
+            [''],
+            ['ods--21', 'ods--22', 'ods--23'],
+            [''],
+            [''],
+            ['ods--51', 'ods--52', 'ods--53'],
+            ['ods--61', 'ods--62', 'ods--63'],
         ];
         $this->assertEquals($expectedRows, $allRows);
     }
@@ -485,15 +522,18 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $fileName
      * @param bool|void $shouldFormatDates
+     * @param bool|void $shouldPreserveEmptyRows
      * @return array All the read rows the given file
      */
-    private function getAllRowsForFile($fileName, $shouldFormatDates = false)
+    private function getAllRowsForFile($fileName, $shouldFormatDates = false, $shouldPreserveEmptyRows = false)
     {
         $allRows = [];
         $resourcePath = $this->getResourcePath($fileName);
 
+        /** @var \Box\Spout\Reader\ODS\Reader $reader */
         $reader = ReaderFactory::create(Type::ODS);
         $reader->setShouldFormatDates($shouldFormatDates);
+        $reader->setShouldPreserveEmptyRows($shouldPreserveEmptyRows);
         $reader->open($resourcePath);
 
         foreach ($reader->getSheetIterator() as $sheetIndex => $sheet) {

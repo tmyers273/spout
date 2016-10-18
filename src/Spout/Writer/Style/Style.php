@@ -115,7 +115,7 @@ class Style
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function shouldApplyBorder()
     {
@@ -123,7 +123,7 @@ class Style
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFontBold()
     {
@@ -142,7 +142,7 @@ class Style
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFontItalic()
     {
@@ -161,7 +161,7 @@ class Style
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFontUnderline()
     {
@@ -180,7 +180,7 @@ class Style
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFontStrikethrough()
     {
@@ -261,7 +261,7 @@ class Style
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function shouldWrapText()
     {
@@ -269,13 +269,22 @@ class Style
     }
 
     /**
+     * @param bool|void $shouldWrap Should the text be wrapped
      * @return Style
      */
-    public function setShouldWrapText()
+    public function setShouldWrapText($shouldWrap = true)
     {
-        $this->shouldWrapText = true;
+        $this->shouldWrapText = $shouldWrap;
         $this->hasSetWrapText = true;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSetWrapText()
+    {
+        return $this->hasSetWrapText;
     }
 
     /**

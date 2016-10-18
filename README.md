@@ -5,7 +5,6 @@
 [![Build Status](https://travis-ci.org/box/spout.svg?branch=master)](https://travis-ci.org/box/spout)
 [![Code Coverage](https://scrutinizer-ci.com/g/box/spout/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/box/spout/?branch=master)
 [![Total Downloads](https://poser.pugx.org/box/spout/downloads)](https://packagist.org/packages/box/spout)
-[![License](https://poser.pugx.org/box/spout/license)](https://packagist.org/packages/box/spout)
 
 Spout is a PHP library to read and write spreadsheet files (CSV, XLSX and ODS), in a fast and scalable way.
 Contrary to other file readers or writers, it is capable of processing very large files while keeping the memory usage really low (less than 3MB).
@@ -18,24 +17,20 @@ Join the community and come discuss about Spout: [![Gitter](https://badges.gitte
 
 Spout can be installed directly from [Composer](https://getcomposer.org/).
 
+In composer.json:
+```
+"repositories": [
+        {
+            "type": "git",
+            "url":  "git@github.com:tmyers273/spout.git"
+        }
+    ],
+```
+
 Run the following command:
 ```
 $ composer require box/spout
 ```
-
-### Manual installation
-
-If you can't use Composer, no worries! You can still install Spout manually.
-
-> Before starting, make sure your system meets the [requirements](#requirements).
-
-1. Download the source code from the [Releases page](https://github.com/box/spout/releases)
-2. Extract the downloaded content into your project.
-3. Add this code to the top controller (index.php) or wherever it may be more appropriate:
-```php
-require_once '[PATH/TO]/src/Spout/Autoloader/autoload.php'; // don't forget to change the path!
-```
-
 
 ## Requirements
 
@@ -209,7 +204,7 @@ Font      | Bold          | `StyleBuilder::setFontBold()`
           | Font name     | `StyleBuilder::setFontName('Arial')`
           | Font size     | `StyleBuilder::setFontSize(14)`
           | Font color    | `StyleBuilder::setFontColor(Color::BLUE)`<br>`StyleBuilder::setFontColor(Color::rgb(0, 128, 255))`
-Alignment | Wrap text     | `StyleBuilder::setShouldWrapText()`
+Alignment | Wrap text     | `StyleBuilder::setShouldWrapText(true|false)`
 
 #### New sheet creation
 
@@ -259,7 +254,7 @@ $writer->setShouldUseInlineStrings(false); // will use shared strings
 
 When reading a spreadsheet containing dates or times, Spout returns the values by default as DateTime objects.
 It is possible to change this behavior and have a formatted date returned instead (e.g. "2016-11-29 1:22 AM"). The format of the date corresponds to what is specified in the spreadsheet.
- 
+
 ```php
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
@@ -302,7 +297,7 @@ $sheetName = $sheet->getName();
 // Customizing the sheet name when writing
 $sheet = $writer->getCurrentSheet();
 $sheet->setName('My custom name');
-``` 
+```
 
 > Please note that Excel has some restrictions on the sheet's name:
 > * it must not be blank
