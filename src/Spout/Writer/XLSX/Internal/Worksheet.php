@@ -200,7 +200,16 @@ EOD;
         $cellXML .= ' s="' . $styleId . '"';
 
         if (CellHelper::isFormula($cellValue)) {
-            echo($cellValue . " is a formula\n");
+            $parts = explode("|||", $cellValue);
+
+            $cellXML .= '>';
+            $cellXML .= "<f>$parts[0]</f>";
+
+            if (isset($parts[1])) {
+                $cellXML .= "<v>$parts[1]</v>";
+            }
+
+            $cellXML .= "</c>";
         } else if (CellHelper::isNonEmptyString($cellValue)) {
             if ($this->shouldUseInlineStrings) {
                 $cellXML .= ' t="inlineStr"><is><t>' . $this->stringsEscaper->escape($cellValue) . '</t></is></c>';
