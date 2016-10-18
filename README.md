@@ -26,10 +26,11 @@ In composer.json:
         }
     ],
 ```
-
-Run the following command:
 ```
-$ composer require tmyers273/spout
+"require": {
+    ...
+    "tmyers273/spout": "dev-master"
+}
 ```
 
 ## Requirements
