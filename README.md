@@ -366,9 +366,9 @@ Here are a few numbers regarding the performance of Spout:
 
 #### Does Spout support charts or formulas?
 
-No. This is a compromise to keep memory usage low. Charts and formulas requires data to be kept in memory in order to be used.
-So the larger the file would be, the more memory would be consumed, preventing your code to scale well.
+Yes! When addingRows(), simply type the formula in with the leading equals sign (ex "=A1+B1").
 
+To give it a default value, add three pipes and then the default value to the formula. (ex "=A1+B1|||3")
 
 ## Support
 
