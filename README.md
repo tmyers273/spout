@@ -29,7 +29,7 @@ In composer.json:
 
 Run the following command:
 ```
-$ composer require box/spout
+$ composer require tmyers273/spout
 ```
 
 ## Requirements
