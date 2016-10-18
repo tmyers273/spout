@@ -170,7 +170,9 @@ EOD;
         $cellXML = '<c r="' . $columnIndex . $rowIndex . '"';
         $cellXML .= ' s="' . $styleId . '"';
 
-        if (CellHelper::isNonEmptyString($cellValue)) {
+        if (CellHelper::isFormula($cellValue)) {
+            echo($cellValue . " is a formula\n");
+        } else if (CellHelper::isNonEmptyString($cellValue)) {
             if ($this->shouldUseInlineStrings) {
                 $cellXML .= ' t="inlineStr"><is><t>' . $this->stringsEscaper->escape($cellValue) . '</t></is></c>';
             } else {
