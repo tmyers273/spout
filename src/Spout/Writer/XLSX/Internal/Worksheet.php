@@ -199,7 +199,18 @@ EOD;
         $cellXML = '<c r="' . $columnIndex . $rowIndex . '"';
         $cellXML .= ' s="' . $styleId . '"';
 
-        if (CellHelper::isNonEmptyString($cellValue)) {
+        if (CellHelper::isFormula($cellValue)) {
+            $parts = explode("|||", $cellValue);
+
+            $cellXML .= '>';
+            $cellXML .= "<f>$parts[0]</f>";
+
+            if (isset($parts[1])) {
+                $cellXML .= "<v>$parts[1]</v>";
+            }
+
+            $cellXML .= "</c>";
+        } else if (CellHelper::isNonEmptyString($cellValue)) {
             if ($this->shouldUseInlineStrings) {
                 $cellXML .= ' t="inlineStr"><is><t>' . $this->stringsEscaper->escape($cellValue) . '</t></is></c>';
             } else {

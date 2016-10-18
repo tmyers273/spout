@@ -88,4 +88,17 @@ class CellHelper
     {
         return gettype($value) === 'boolean';
     }
+
+    public static function isFormula($value)
+    {
+        if (! static::isNonEmptyString($value)) {
+            return false;
+        }
+
+        if (substr($value, 0, 1) == '=') {
+            return true;
+        }
+
+        return false;
+    }
 }

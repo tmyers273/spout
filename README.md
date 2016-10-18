@@ -17,24 +17,20 @@ Join the community and come discuss about Spout: [![Gitter](https://badges.gitte
 
 Spout can be installed directly from [Composer](https://getcomposer.org/).
 
+In composer.json:
+```
+"repositories": [
+        {
+            "type": "git",
+            "url":  "git@github.com:tmyers273/spout.git"
+        }
+    ],
+```
+
 Run the following command:
 ```
 $ composer require box/spout
 ```
-
-### Manual installation
-
-If you can't use Composer, no worries! You can still install Spout manually.
-
-> Before starting, make sure your system meets the [requirements](#requirements).
-
-1. Download the source code from the [Releases page](https://github.com/box/spout/releases)
-2. Extract the downloaded content into your project.
-3. Add this code to the top controller (index.php) or wherever it may be more appropriate:
-```php
-require_once '[PATH/TO]/src/Spout/Autoloader/autoload.php'; // don't forget to change the path!
-```
-
 
 ## Requirements
 
