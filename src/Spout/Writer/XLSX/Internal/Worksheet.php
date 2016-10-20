@@ -211,6 +211,11 @@ EOD;
             $cellXML .= "<f>$formula</f>";
 
             if (isset($parts[1])) {
+
+                if (! is_numeric($parts[1])) {
+                    $parts[1] = 0;
+                }
+
                 $cellXML .= "<v>$parts[1]</v>";
             }
 
